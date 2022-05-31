@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Artist extends Model
 {
     use HasFactory;
+
+    public function schedule()
+    {
+        return $this->hasMany(Schedule::class, 'artist_id', 'id');
+    }
+
+    public function booking()
+    {
+        return $this->hasMany(Booking::class, 'artist_id', 'id');
+    }
 }
