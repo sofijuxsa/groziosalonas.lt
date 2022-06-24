@@ -13,4 +13,19 @@ class Service extends Model
     {
         return $this->hasMany(Schedule::class, 'service_id', 'id');
     }
+
+    public function children()
+    {
+        return $this->hasMany(Service::class,'parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Service::class, 'parent_id');
+    }
+
+    public function serviceArtist()
+    {
+        return $this->hasMany(ServiceArtist::class, 'service_id', 'id');
+    }
 }

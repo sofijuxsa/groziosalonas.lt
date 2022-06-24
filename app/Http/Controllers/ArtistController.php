@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Service;
+use App\Models\ServiceArtist;
 use Illuminate\Http\Request;
+use App\Models\Artist;
+use Illuminate\Support\Facades\Auth;
 
 class ArtistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->middleware('auth');
     }
 
     /**
@@ -34,27 +33,31 @@ class ArtistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $artist = new Artist();
+        $artist->last_name = $request->post('last_name');
+        $artist->email = $request->post('email');
+        $artist->password = $request->post('password');
+        $artist->phone_number = $request->post('phone_number');
+        $artist->save();
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function show(Artist $artist)
     {
-        $id = $artist->id;
-        $data['artist'] = Artist::query()->where('id', $id)->getOne();
+        $data['artists'] = $artist;
         return view('artist.edit', $data);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Artist  $artist
+     * @return array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function edit(Artist $artist)
     {
@@ -66,7 +69,6 @@ class ArtistController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Artist $artist)
@@ -77,6 +79,24 @@ class ArtistController extends Controller
         $artist->password = $request->post('password');
         $artist->phone_number = $request->post('phone_number');
         $artist->save();
-
     }
+
+    public function mySchedule(Artist $artist)
+    {
+        $id = Auth::id();
+        $data['schedule'] = Schedule::query()->where('artist_id', $id)->get();
+        return view('artist.schedule', $data);
+    }
+
+    public function filterArtist(Request $request)
+    {
+        $service = $request->post('service_id');
+
+        $data['artist'] = ServiceArtist::query()->where('service_id', $service)->get();
+//        $html = view('booking.form', $data);
+//        return \Response::json(['status' => 'true','html' => $html->render() ]);
+//        return view('booking.form', $data);
+        return response()->view('booking.form', compact($data));
+    }
+
 }

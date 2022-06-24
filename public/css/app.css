@@ -11286,3 +11286,30 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+body {
+  background: lightblue;
+}
+
+#header-image {
+  width: 100%;
+  background-image: url(https://thumbs.dreamstime.com/b/banner-template-beauty-salon-advertising-37850996.jpg);
+  height: 250px;
+  background-color: purple;
+  background-position: center;
+}
+.service-list {
+    margin-left: 20%;
+}
+
+#header-image {
+    width: 100%;
+    background-image: url(https://yury.lt/image/catalog/slider/geriausias-yury-grozio-salonas-vilniuje-kirpejas-kirpeja.jpg);
+    height: 250px;
+}
+
+#logo-image {
+    background-image: url(https://www.creativefabrica.com/wp-content/uploads/2020/01/23/Spa-treatment-salon-logo-Beauty-woman-Graphics-1-55-580x348.jpg);
+    height: 60px;
+}
+
+

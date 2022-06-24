@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    public function store(StoreClientRequest $request)
+    public function index()
+    {
+        return view('services');
+    }
+
+    public function store(Request $request)
     {
         $client = new Client();
         $client->name = $request->post('name');

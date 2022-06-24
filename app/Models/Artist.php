@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Auth\UserTrait;
 
@@ -52,5 +53,10 @@ class Artist extends Authenticatable
     public function booking()
     {
         return $this->hasMany(Booking::class, 'artist_id', 'id');
+    }
+
+    public function serviceArtist()
+    {
+        return $this->hasMany(ServiceArtist::class, 'artist_id', 'id');
     }
 }
