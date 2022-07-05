@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Artist;
+use App\Models\Booking;
 use App\Models\Schedule;
+use App\Models\ServiceArtist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,7 +13,7 @@ class ScheduleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth');
     }
 
     public function create()
@@ -22,9 +25,11 @@ class ScheduleController extends Controller
     {
         $schedule = new Schedule();
         $schedule->date = $request->post('date');
-        $schedule->service_id = $request->post('service_id');
-        $schedule->start_time = $request->post('start_Time');
-        $schedule->end_time = $request->post('end_time');
+//        $schedule->service_id = $request->post('service_id');
+//        $schedule->start_time = $request->post('start_Time');
+//        $schedule->end_time = $request->post('end_time');
+//        $schedule->is_active = $request->post('is_active');
+        $schedule->artist_id = $request->post('artist_id');
         $schedule->save();
     }
 
@@ -47,6 +52,53 @@ class ScheduleController extends Controller
         $schedule->service_id = $request->post('service_id');
         $schedule->start_time = $request->post('start_Time');
         $schedule->end_time = $request->post('end_time');
+        $schedule->is_active = $request->post('is_active');
         $schedule->save();
     }
+
+    public function disableDay(Request $request, Schedule $schedule)
+    {
+        $schedule = new Schedule();
+        $schedule->artist_id = Auth::id();
+        $schedule->date = $request->post('disableDay');
+        $schedule->save();
+        return view('schedule.form');
+    }
+
+    public function enableDay(Request $request, Schedule $schedule)
+    {
+        $artist_id = Auth::id();
+        $date = $request->post('enableDay');
+        $enable = Schedule::query()->select()->where('date', $date)->where('artist_id', $artist_id)->delete();
+
+        return view('schedule.form');
+
+    }
+
+    public function filterSchedule(Request $request, Schedule $schedule)
+    {
+        $disabledDates = [];
+        $artist_id = $request->post('chooseArtist');
+        $data = Schedule::query()->select('date')->where('artist_id', $artist_id)->get();
+
+        foreach ($data as $date) {
+            $disabledDates[] = $date->date;
+        }
+
+        return response()->json($disabledDates);
+    }
+
+    public function filterSchedule2(Schedule $schedule)
+    {
+        $disabledDates = [];
+        $artist_id = Auth::id();
+        $data = Schedule::query()->select('date')->where('artist_id', $artist_id)->get();
+        foreach ($data as $date) {
+            $disabledDates[] = $date->date;
+        }
+
+        return response()->json(str_replace('-', '/', $disabledDates));
+
+    }
+
 }

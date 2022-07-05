@@ -15,7 +15,7 @@ class CreateBookingsTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id');
+            $table->integer('service');
             $table->integer('artist_id');
             $table->boolean('active');
             $table->dateTime('start_time');

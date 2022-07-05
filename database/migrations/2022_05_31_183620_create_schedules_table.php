@@ -17,9 +17,9 @@ class CreateSchedulesTable extends Migration
             $table->id();
             $table->date('date');
             $table->integer('artist_id');
-            $table->integer('service_id');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+//            $table->dateTime('start_time');
+//            $table->dateTime('end_time');
+//            $table->tinyInteger('is_active');
             $table->timestamps();
         });
     }

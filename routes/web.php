@@ -25,14 +25,26 @@ Route::get('/services', [App\Http\Controllers\ClientController::class, 'index'])
 Route::get('/services', [App\Http\Controllers\ServiceController::class, 'show'])->name('services');
 
 Route::get('/artist/edit', [App\Http\Controllers\ArtistController::class, 'edit'])->name('artist.edit');
-Route::post('/artist/update', [App\Http\Controllers\ArtistController::class, 'update'])->name('artist.update');
+Route::post('/artist/update/{id}', [App\Http\Controllers\ArtistController::class, 'update'])->name('artist.update');
 
 Route::get('/schedule/form', [App\Http\Controllers\ScheduleController::class, 'create'])->name('schedule.form');
+Route::post('/schedule/form', [App\Http\Controllers\ScheduleController::class, 'disableDay'])->name('schedule.disableDay');
+Route::post('/schedule/form/enable', [App\Http\Controllers\ScheduleController::class, 'enableDay'])->name('schedule.enableDay');
+
 //Route::get('/schedule', [App\Http\Controllers\ScheduleController::class, 'show'])->name('schedule');
-Route::get('/schedule/edit', [App\Http\Controllers\ScheduleController::class, 'edit'])->name('schedule.edit');
 Route::post('/schedule/update', [App\Http\Controllers\ScheduleController::class, 'update'])->name('schedule.update');
 
 Route::get('/booking', [App\Http\Controllers\BookingController::class, 'create'])->name('booking.form');
 Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
 
-Route::post('choosingArtist','ArtistController@filterArtist');
+Route::post('/booking/filterArtist', [App\Http\Controllers\ArtistController::class, 'filterArtist'])->name('artist.filter');
+Route::post('/booking/filterSchedule', [App\Http\Controllers\ScheduleController::class, 'filterSchedule'])->name('schedule.filter');
+Route::get('/schedule/form/disabled', [App\Http\Controllers\ScheduleController::class, 'filterSchedule2'])->name('schedule.filter2');
+
+
+Route::post('/booking/filterBooking', [App\Http\Controllers\BookingController::class, 'filterBooking'])->name('booking.filter');
+
+
+//Route::post('/booking/filterArtist','App\Http\Controllers\ArtistController@filterArtist');
+
+Route::get('/artist/bookings', [App\Http\Controllers\ArtistController::class, 'myReservations'])->name('artist.bookings');

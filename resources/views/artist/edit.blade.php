@@ -13,13 +13,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">{{ __('Redaguoti profilį') }}</div>
                 <div class="card-body">
                     <form class="form" method="POST" action="{{ route('artist.update', $artist->id) }}">
                         @csrf
                         @method('POST')
                         <div class="form-group">
-                            <h1>{{$artist->name}}</h1>
                             <label>{{$artist->name}}</label>
                             <input value="{{$artist->name}}" type="text" name="name" class="form-control"
                                    placeholder="{{$artist->name}}">

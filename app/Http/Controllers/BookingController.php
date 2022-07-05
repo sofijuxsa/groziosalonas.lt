@@ -34,4 +34,14 @@ class BookingController extends Controller
         $data['services'] = Service::query()->where('parent_id', 0)->get();
         return view('booking.form', $data);
     }
+
+    public function filterBooking(Request $request)
+    {
+        $artist_id = $request->post('artist');
+        dd($artist_id);
+//        $date = $request->post('formData');
+//        console.log($date);
+//        console.log($artist_id);
+        return response()->json($artist_id);
+    }
 }

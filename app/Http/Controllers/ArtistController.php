@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Service;
 use App\Models\ServiceArtist;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class ArtistController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth');
     }
 
     /**
@@ -49,8 +50,10 @@ class ArtistController extends Controller
      */
     public function show(Artist $artist)
     {
-        $data['artists'] = $artist;
-        return view('artist.edit', $data);
+//        $id = $artist->id;
+//        $data['artist'] = Artist::query()->where('id', $id)->get();
+//        $data['artist'] = $artist;
+//        return view('artist.edit', $data);
     }
 
     /**
@@ -61,8 +64,12 @@ class ArtistController extends Controller
      */
     public function edit(Artist $artist)
     {
-        $data['artist'] = $artist;
-        return view('artist.edit', $data);
+        $this->middleware('auth');
+
+        $id = Auth::id();
+        $artist = Artist::query()->findOrFail($id);
+
+        return view('artist.edit', ['artist' => $artist]);
     }
 
     /**
@@ -73,12 +80,16 @@ class ArtistController extends Controller
      */
     public function update(Request $request, Artist $artist)
     {
+        $id = Auth::id();
+        $artist = Artist::query()->findOrFail($id);
         $artist->name = $request->post('name');
         $artist->last_name = $request->post('last_name');
         $artist->email = $request->post('email');
         $artist->password = $request->post('password');
         $artist->phone_number = $request->post('phone_number');
         $artist->save();
+
+        return view('welcome');
     }
 
     public function mySchedule(Artist $artist)
@@ -88,15 +99,25 @@ class ArtistController extends Controller
         return view('artist.schedule', $data);
     }
 
-    public function filterArtist(Request $request)
+    public function myReservations(Artist $artist)
     {
-        $service = $request->post('service_id');
-
-        $data['artist'] = ServiceArtist::query()->where('service_id', $service)->get();
-//        $html = view('booking.form', $data);
-//        return \Response::json(['status' => 'true','html' => $html->render() ]);
-//        return view('booking.form', $data);
-        return response()->view('booking.form', compact($data));
+        $id = Auth::id();
+        $data['bookings'] = Booking::query()->where('artist_id', $id)->get();
+        return view('artist.bookings', $data);
     }
 
+    public function filterArtist(Request $request)
+    {
+        $artistId = [];
+        $service_id = $request->post('chooseService');
+        $data = ServiceArtist::query()->where('service_id', $service_id)->get();
+
+        foreach ($data as $obj)
+        {
+            $artistId[] = $obj->artist_id;
+        }
+
+        $data['artists'] = Artist::query()->whereIn('id', $artistId)->get();
+        return response()->json($data['artists']);
+    }
 }
